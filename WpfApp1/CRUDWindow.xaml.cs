@@ -29,39 +29,6 @@ namespace WpfApp1
         private SqlConnection _connect;
         private void updateDT()
         {
-            //List<UserModel> userList = null;// _context
-                //.Users.Select(u => new UserModel
-                //{
-                //    Id = u.Id,
-                //    FirstName = u.FirstName,
-                //    LastName = u.LastName,
-                //    Email = u.Email,
-                //    Password = u.Password
-                //}).ToList();
-
-            
-
-            //DataColumn id = new DataColumn("id", typeof(int));
-            ////id.Caption = "hello";
-            //DataColumn firstname = new DataColumn("firstname", typeof(string));
-            //DataColumn lastname = new DataColumn("lastname", typeof(string));
-            //DataColumn email = new DataColumn("email", typeof(string));
-            //DataColumn password = new DataColumn("password", typeof(string));
-            //dt.Columns.Add(id);
-            //dt.Columns.Add(firstname);
-            //dt.Columns.Add(lastname);
-            //dt.Columns.Add(email);
-            //dt.Columns.Add(password);
-            //foreach (var user in userList)
-            //{
-            //    DataRow row = dt.NewRow();
-            //    row[0] = user.Id;
-            //    row[1] = user.FirstName;
-            //    row[2] = user.LastName;
-            //    row[3] = user.Email;
-            //    row[4] = user.Password;
-            //    dt.Rows.Add(row);
-            //}
             try
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -98,14 +65,6 @@ namespace WpfApp1
 
         private void Add_btn_Click(object sender, RoutedEventArgs e)
         {
-            //_context.Users.Add(new User
-            //{
-            //    FirstName = firstname_txtbx.Text,
-            //    LastName = lastname_txtbx.Text,
-            //    Email = email_txtbx.Text,
-            //    Password = password_txtbx.Text
-            //});
-            //_context.SaveChanges();
             try
             {
                 using (TransactionScope scope = new TransactionScope())
@@ -169,18 +128,8 @@ namespace WpfApp1
 
         private void Update_btn_Click(object sender, RoutedEventArgs e)
         {
-            //User upd = null;
-
             try
             {
-                //upd = _context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First();
-                
-                //upd.FirstName = firstname_txtbx.Text;
-                //upd.LastName = lastname_txtbx.Text;
-                //upd.Email = email_txtbx.Text;
-                //upd.Password = password_txtbx.Text;
-                //_context.SaveChanges();
-
                 using (TransactionScope scope = new TransactionScope())
                 {
                     _connect.Open();
@@ -223,7 +172,6 @@ namespace WpfApp1
             {
                 throw new Exception("transaction error");
             }
-            
             updateDT();
             add_btn.IsEnabled = false;
             delete_btn.IsEnabled = false;
@@ -234,9 +182,6 @@ namespace WpfApp1
         {
             try
             {
-                //_context.Users.Remove(_context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First());
-                //_context.SaveChanges();
-
                 using (TransactionScope scope = new TransactionScope())
                 {
                     _connect.Open();
@@ -253,7 +198,6 @@ namespace WpfApp1
                     _connect.Close();
                     scope.Complete();
                 }
-
                 user_id_txtbx.Text = "";
                 email_txtbx.Text = "";
                 firstname_txtbx.Text = "";
@@ -267,7 +211,6 @@ namespace WpfApp1
             {
                 throw new Exception("tranasction error");
             }
-
             updateDT();
             add_btn.IsEnabled = false;
             delete_btn.IsEnabled = false;
@@ -278,9 +221,6 @@ namespace WpfApp1
         {
             try
             {
-
-                //_context.Users.RemoveRange(_context.Users.Where(u => u.Id.ToString() != null));
-                //_context.SaveChanges();
                 using (TransactionScope scope = new TransactionScope())
                 {
                     _connect.Open();
@@ -297,7 +237,6 @@ namespace WpfApp1
             {
                 throw new Exception("transaction error");
             }
-
             updateDT();
 
             add_btn.IsEnabled = false;
