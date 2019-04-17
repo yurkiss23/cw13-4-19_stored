@@ -22,19 +22,17 @@ namespace WpfApp1
     /// </summary>
     public partial class CRUDWindow : Window
     {
-        private EFContext _context;
-
         private void updateDT()
         {
-            List<UserModel> userList = _context
-                .Users.Select(u => new UserModel
-                {
-                    Id = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Email = u.Email,
-                    Password = u.Password
-                }).ToList();
+            List<UserModel> userList = null;// _context
+                //.Users.Select(u => new UserModel
+                //{
+                //    Id = u.Id,
+                //    FirstName = u.FirstName,
+                //    LastName = u.LastName,
+                //    Email = u.Email,
+                //    Password = u.Password
+                //}).ToList();
 
             DataTable dt = new DataTable();
 
@@ -66,7 +64,6 @@ namespace WpfApp1
         public CRUDWindow()
         {
             InitializeComponent();
-            _context = new EFContext();
         }
 
         private void MyDT_Loaded(object sender, RoutedEventArgs e)
@@ -76,14 +73,14 @@ namespace WpfApp1
 
         private void Add_btn_Click(object sender, RoutedEventArgs e)
         {
-            _context.Users.Add(new User
-            {
-                FirstName = firstname_txtbx.Text,
-                LastName = lastname_txtbx.Text,
-                Email = email_txtbx.Text,
-                Password = password_txtbx.Text
-            });
-            _context.SaveChanges();
+            //_context.Users.Add(new User
+            //{
+            //    FirstName = firstname_txtbx.Text,
+            //    LastName = lastname_txtbx.Text,
+            //    Email = email_txtbx.Text,
+            //    Password = password_txtbx.Text
+            //});
+            //_context.SaveChanges();
             updateDT();
 
             email_txtbx.Text = "";
@@ -120,13 +117,13 @@ namespace WpfApp1
 
             try
             {
-                upd = _context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First();
+                //upd = _context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First();
                 
-                upd.FirstName = firstname_txtbx.Text;
-                upd.LastName = lastname_txtbx.Text;
-                upd.Email = email_txtbx.Text;
-                upd.Password = password_txtbx.Text;
-                _context.SaveChanges();
+                //upd.FirstName = firstname_txtbx.Text;
+                //upd.LastName = lastname_txtbx.Text;
+                //upd.Email = email_txtbx.Text;
+                //upd.Password = password_txtbx.Text;
+                //_context.SaveChanges();
 
                 user_id_txtbx.Text = "";
                 email_txtbx.Text = "";
@@ -152,8 +149,8 @@ namespace WpfApp1
         {
             try
             {
-                _context.Users.Remove(_context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First());
-                _context.SaveChanges();
+                //_context.Users.Remove(_context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First());
+                //_context.SaveChanges();
 
                 user_id_txtbx.Text = "";
                 email_txtbx.Text = "";
@@ -180,8 +177,8 @@ namespace WpfApp1
             try
             {
 
-                _context.Users.RemoveRange(_context.Users.Where(u => u.Id.ToString() != null));
-                _context.SaveChanges();
+                //_context.Users.RemoveRange(_context.Users.Where(u => u.Id.ToString() != null));
+                //_context.SaveChanges();
             }
             catch (Exception ex)
             {
