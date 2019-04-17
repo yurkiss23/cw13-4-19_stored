@@ -237,6 +237,23 @@ namespace WpfApp1
                 //_context.Users.Remove(_context.Users.Where(u => u.Id.ToString() == user_id_txtbx.Text).First());
                 //_context.SaveChanges();
 
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    _connect.Open();
+                    SqlCommand cmd = new SqlCommand("DelUser", _connect);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter;
+
+                    parameter = cmd.Parameters.Add("@id", SqlDbType.Int);
+                    parameter.Value = int.Parse(user_id_txtbx.Text);
+
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("delete user");
+
+                    _connect.Close();
+                    scope.Complete();
+                }
+
                 user_id_txtbx.Text = "";
                 email_txtbx.Text = "";
                 firstname_txtbx.Text = "";
