@@ -67,7 +67,7 @@ namespace WpfApp1
                 using (TransactionScope scope = new TransactionScope())
                 {
                     _connect.Open();
-                    SqlCommand cmd = new SqlCommand("ShowValues", _connect);
+                    SqlCommand cmd = new SqlCommand("GetUsers", _connect);
                     cmd.CommandType = CommandType.StoredProcedure;
                     var value = cmd.ExecuteReader();
                     if (value != null)
@@ -169,8 +169,7 @@ namespace WpfApp1
 
         private void Update_btn_Click(object sender, RoutedEventArgs e)
         {
-
-            User upd = null;
+            //User upd = null;
 
             try
             {
@@ -182,6 +181,35 @@ namespace WpfApp1
                 //upd.Password = password_txtbx.Text;
                 //_context.SaveChanges();
 
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    _connect.Open();
+                    SqlCommand cmd = new SqlCommand("UpdUser", _connect);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter;
+
+                    parameter = cmd.Parameters.Add("@id", SqlDbType.Int);
+                    parameter.Value = int.Parse(user_id_txtbx.Text);
+
+                    parameter = cmd.Parameters.Add("@fn", SqlDbType.NVarChar, 50);
+                    parameter.Value = firstname_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@ln", SqlDbType.NVarChar, 50);
+                    parameter.Value = lastname_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@em", SqlDbType.NVarChar, 50);
+                    parameter.Value = email_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@pw", SqlDbType.NVarChar, 50);
+                    parameter.Value = password_txtbx.Text;
+
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show($"Update user(s)");
+
+                    _connect.Close();
+                    scope.Complete();
+                }
+
                 user_id_txtbx.Text = "";
                 email_txtbx.Text = "";
                 firstname_txtbx.Text = "";
@@ -191,9 +219,9 @@ namespace WpfApp1
                 myDT.DataContext = null;
                 MyDT_Loaded(sender, e);
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                throw new Exception("transaction error");
             }
             
             updateDT();
