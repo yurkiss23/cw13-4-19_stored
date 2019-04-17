@@ -263,9 +263,9 @@ namespace WpfApp1
                 myDT.DataContext = null;
                 MyDT_Loaded(sender, e);
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                throw new Exception("tranasction error");
             }
 
             updateDT();
@@ -281,10 +281,21 @@ namespace WpfApp1
 
                 //_context.Users.RemoveRange(_context.Users.Where(u => u.Id.ToString() != null));
                 //_context.SaveChanges();
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    _connect.Open();
+                    SqlCommand cmd = new SqlCommand("ResUsers", _connect);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("remove all users");
+
+                    _connect.Close();
+                    scope.Complete();
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                throw new Exception("transaction error");
             }
 
             updateDT();
