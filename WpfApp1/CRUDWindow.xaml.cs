@@ -69,11 +69,9 @@ namespace WpfApp1
                     _connect.Open();
                     SqlCommand cmd = new SqlCommand("ShowValues", _connect);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    MessageBox.Show("!!!");
                     var value = cmd.ExecuteReader();
                     if (value != null)
                     {
-                        MessageBox.Show("in");
                         DataTable dt = new DataTable();
                         dt.Load(value);
                         myDT.ItemsSource = dt.DefaultView;
@@ -108,6 +106,38 @@ namespace WpfApp1
             //    Password = password_txtbx.Text
             //});
             //_context.SaveChanges();
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    _connect.Open();
+                    SqlCommand cmd = new SqlCommand("AddUser", _connect);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter;
+
+                    parameter = cmd.Parameters.Add("@fn", SqlDbType.NVarChar, 50);
+                    parameter.Value = firstname_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@ln", SqlDbType.NVarChar, 50);
+                    parameter.Value = lastname_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@em", SqlDbType.NVarChar, 50);
+                    parameter.Value = email_txtbx.Text;
+
+                    parameter = cmd.Parameters.Add("@pw", SqlDbType.NVarChar, 50);
+                    parameter.Value = password_txtbx.Text;
+
+                    int added = cmd.ExecuteNonQuery();
+                    MessageBox.Show($"add {added.ToString()} user(s)");
+
+                    _connect.Close();
+                    scope.Complete();
+                }
+            }
+            catch
+            {
+                throw new Exception("transaction error");
+            }
             updateDT();
 
             email_txtbx.Text = "";
