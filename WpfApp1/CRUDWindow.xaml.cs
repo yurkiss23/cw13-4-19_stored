@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,9 +25,11 @@ namespace WpfApp1
     /// </summary>
     public partial class CRUDWindow : Window
     {
+        private string conStr = ConfigurationManager.AppSettings["conStr"];
+        private SqlConnection _connect;
         private void updateDT()
         {
-            List<UserModel> userList = null;// _context
+            //List<UserModel> userList = null;// _context
                 //.Users.Select(u => new UserModel
                 //{
                 //    Id = u.Id,
@@ -34,36 +39,58 @@ namespace WpfApp1
                 //    Password = u.Password
                 //}).ToList();
 
-            DataTable dt = new DataTable();
+            
 
-            DataColumn id = new DataColumn("id", typeof(int));
-            //id.Caption = "hello";
-            DataColumn firstname = new DataColumn("firstname", typeof(string));
-            DataColumn lastname = new DataColumn("lastname", typeof(string));
-            DataColumn email = new DataColumn("email", typeof(string));
-            DataColumn password = new DataColumn("password", typeof(string));
-            dt.Columns.Add(id);
-            dt.Columns.Add(firstname);
-            dt.Columns.Add(lastname);
-            dt.Columns.Add(email);
-            dt.Columns.Add(password);
-            foreach (var user in userList)
+            //DataColumn id = new DataColumn("id", typeof(int));
+            ////id.Caption = "hello";
+            //DataColumn firstname = new DataColumn("firstname", typeof(string));
+            //DataColumn lastname = new DataColumn("lastname", typeof(string));
+            //DataColumn email = new DataColumn("email", typeof(string));
+            //DataColumn password = new DataColumn("password", typeof(string));
+            //dt.Columns.Add(id);
+            //dt.Columns.Add(firstname);
+            //dt.Columns.Add(lastname);
+            //dt.Columns.Add(email);
+            //dt.Columns.Add(password);
+            //foreach (var user in userList)
+            //{
+            //    DataRow row = dt.NewRow();
+            //    row[0] = user.Id;
+            //    row[1] = user.FirstName;
+            //    row[2] = user.LastName;
+            //    row[3] = user.Email;
+            //    row[4] = user.Password;
+            //    dt.Rows.Add(row);
+            //}
+            try
             {
-                DataRow row = dt.NewRow();
-                row[0] = user.Id;
-                row[1] = user.FirstName;
-                row[2] = user.LastName;
-                row[3] = user.Email;
-                row[4] = user.Password;
-                dt.Rows.Add(row);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    _connect.Open();
+                    SqlCommand cmd = new SqlCommand("ShowValues", _connect);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    MessageBox.Show("!!!");
+                    var value = cmd.ExecuteReader();
+                    if (value != null)
+                    {
+                        MessageBox.Show("in");
+                        DataTable dt = new DataTable();
+                        dt.Load(value);
+                        myDT.ItemsSource = dt.DefaultView;
+                    }
+                    _connect.Close();
+                    scope.Complete();
+                }
             }
-
-            myDT.ItemsSource = dt.DefaultView;
-
+            catch
+            {
+                throw new Exception("transaction error");
+            }
         }
         public CRUDWindow()
         {
             InitializeComponent();
+            _connect = new SqlConnection(conStr);
         }
 
         private void MyDT_Loaded(object sender, RoutedEventArgs e)
